@@ -16,8 +16,8 @@ This document separates reported vehicle results from local static checks. A sta
 | NEMESIS v1.0.3 STOP | Original Android Auto state restored | Reported vehicle result |
 | NEMESIS v1.0.3 full START | Not confirmed | Requires a dedicated vehicle trial |
 | Repeated START/STOP | Not confirmed | Vehicle test required |
-| USB unplug/reconnect | Not confirmed | Vehicle test required |
-| Reboot recovery | Not confirmed | Vehicle test required |
+| USB adapter unplug/reconnect | Wi-Fi reportedly does not recover until the head unit is restarted | Observed use; cause and package/driver responsibility are not isolated |
+| Service/state recovery after reboot | Not confirmed | Separate from the reported Wi-Fi recovery after restarting the head unit |
 | Forced termination/power-loss recovery | Not confirmed | Traps cannot handle SIGKILL or power loss |
 | Android Auto and Wi-Fi at the same time | Not confirmed | Do not assume coexistence |
 
