@@ -4,6 +4,8 @@
 
 An experimental NEMESIS service package for Hyundai Tucson NX4 HEV Gen5W head units using a Realtek RTL8188EU USB Wi-Fi adapter. It coordinates Wi-Fi module startup with the Android Auto projection package state.
 
+**Project background:** Many Korean-market 5W head units do not include a built-in WLAN module. This project began to add wireless networking through a USB WLAN adapter.
+
 This repository contains the NEMESIS package scripts and packaging tools. It is **not** the kernel driver source repository. Driver source and build notes are maintained in [`nx4-rtl8188eu-kmod`](https://github.com/EGG-RAMYON/nx4-rtl8188eu-kmod). The upstream NEMESIS project is [`xwtk/hmg_nemesis`](https://github.com/xwtk/hmg_nemesis).
 
 ## Compatibility target
@@ -29,6 +31,12 @@ On normal stop or handled termination signals, the service's EXIT trap calls `bi
 Reported separate vehicle testing succeeded for module load, adapter recognition, `wlan0` creation/activation, AP association, DHCP, external IP traffic, DNS lookup, and wireless ADB. Wi-Fi success was observed after disabling Android Auto projection; the internal cause of the interaction is not established.
 
 For package v1.0.3, STOP restoring the original Android Auto state was confirmed. End-to-end START through this NEMESIS service, repeated START/STOP, unplug/reconnect, reboot recovery, forced termination recovery, and simultaneous Android Auto/Wi-Fi have not been confirmed. See [VALIDATION.md](docs/VALIDATION.md).
+
+## Follow-up: Android Auto and USB WLAN coexistence
+
+At START, the current service disables the Android Auto projection package (`com.google.android.projection.sink`) so it can use the USB Wi-Fi adapter. Android Auto therefore cannot be used through this package while the service is running. Vehicle testing reported that Wi-Fi connected after the projection package was disabled, but the internal cause of the conflict has not been established, and simultaneous operation has not been validated.
+
+To meet the project's goal of adding WLAN capability to Korean-market 5W head units, a follow-up maintainer task is to investigate and revise the service's conflict handling and resource coordination so Android Auto and the USB WLAN adapter can work together.
 
 ## Install
 

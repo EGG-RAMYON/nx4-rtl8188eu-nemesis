@@ -4,6 +4,8 @@
 
 현대 투싼 NX4 HEV Gen5W 헤드유닛에서 Realtek RTL8188EU USB Wi-Fi 어댑터를 사용하기 위한 실험용 NEMESIS 서비스 패키지입니다. Wi-Fi 서비스 실행과 Android Auto 프로젝션 패키지 상태를 함께 관리합니다.
 
+**개발 배경:** 국내형 5W 헤드유닛은 내장 무선랜 모듈이 없는 경우가 많아 USB 무선랜 어댑터로 무선 네트워크를 보완하려는 목적으로 시작한 프로젝트입니다.
+
 이 저장소에는 NEMESIS 패키지 스크립트와 패키징 도구가 들어 있습니다. 커널 드라이버 소스 저장소는 아닙니다. 드라이버 소스와 빌드 절차는 [`nx4-rtl8188eu-kmod`](https://github.com/EGG-RAMYON/nx4-rtl8188eu-kmod), NEMESIS 원본 프로젝트는 [`xwtk/hmg_nemesis`](https://github.com/xwtk/hmg_nemesis)에서 관리합니다.
 
 ## 대상 환경
@@ -29,6 +31,12 @@
 별도 실차 시험에서 모듈 적재, 어댑터 인식, `wlan0` 생성/활성화, AP 연결, DHCP, 외부 IP 통신, DNS 조회, 무선 ADB가 성공했다고 보고됐습니다. Android Auto 프로젝션을 비활성화한 뒤 Wi-Fi 연결이 성공했으며, 내부 원인은 규명되지 않았습니다.
 
 NEMESIS v1.0.3의 STOP 시 최초 Android Auto 상태 복원은 확인됐습니다. 이 서비스의 START 전체 과정, 반복 START/STOP, USB 분리·재연결, 재부팅, 강제 종료 복구, Android Auto와 Wi-Fi 동시 사용은 확인되지 않았습니다. [검증 현황](docs/VALIDATION.md)을 참조하세요.
+
+## 후속 수정 과제: Android Auto와 USB 무선랜 동시 사용
+
+현재 서비스는 START 시 Wi-Fi 어댑터를 사용하기 위해 Android Auto 프로젝션 패키지(`com.google.android.projection.sink`)를 비활성화합니다. 따라서 서비스가 실행되는 동안에는 이 패키지로 Android Auto를 사용할 수 없습니다. 실차에서는 프로젝션 패키지를 비활성화한 뒤 Wi-Fi 연결이 성공했지만, 충돌의 내부 원인은 규명되지 않았고 두 기능의 동시 사용도 검증되지 않았습니다.
+
+국내형 5W 헤드유닛에 무선랜 기능을 보완하려는 개발 목적에 맞게, Android Auto와 USB 무선랜을 함께 사용할 수 있도록 서비스의 충돌 처리와 자원 조정 방식을 후속 개발자가 조사·수정해야 하는 과제로 남깁니다.
 
 ## 설치
 
