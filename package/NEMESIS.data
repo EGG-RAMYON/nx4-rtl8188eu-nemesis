@@ -1,0 +1,19 @@
+[nemesis]
+version=1.1
+id=nx4.rtl8188eu.manual
+name=NX4 RTL8188EU Manual WiFi
+type=service
+package-version=1.0.3
+short-desc=Service start enables WiFi; stop attempts AA restore
+os=any
+models=any
+preinstall=scripts/preinstall.sh
+postinstall=scripts/postinstall.sh
+preuninstall=scripts/preuninstall.sh
+
+[service.0]
+name=wifi-loader
+kind=sh
+path=svc/wifi-service.sh
+uid=root
+mode=restart

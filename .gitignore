@@ -1,0 +1,16 @@
+*.ko
+*.o
+*.mod
+*.mod.c
+Module.symvers
+modules.order
+.config
+*.log
+*.pcap
+*.pcapng
+*.key
+*.pem
+.env
+vehicle-data/
+private/
+release-draft/
