@@ -1,42 +1,44 @@
-# NX4 RTL8188EU Manual WiFi for NEMESIS
+> **언어:** 한국어 (기본) · [English](README.en.md)
 
-An experimental NEMESIS service package for Hyundai Tucson NX4 HEV Gen5W head units using a Realtek RTL8188EU USB Wi-Fi adapter. It coordinates Wi-Fi module startup with the Android Auto projection package state.
+# NEMESIS용 NX4 RTL8188EU Manual WiFi
 
-This repository contains the NEMESIS package scripts and packaging tools. It is **not** the kernel driver source repository. Driver source and build notes are maintained in [`nx4-rtl8188eu-kmod`](https://github.com/EGG-RAMYON/nx4-rtl8188eu-kmod). The upstream NEMESIS project is [`xwtk/hmg_nemesis`](https://github.com/xwtk/hmg_nemesis).
+현대 투싼 NX4 HEV Gen5W 헤드유닛에서 Realtek RTL8188EU USB Wi-Fi 어댑터를 사용하기 위한 실험용 NEMESIS 서비스 패키지입니다. Wi-Fi 서비스 실행과 Android Auto 프로젝션 패키지 상태를 함께 관리합니다.
 
-## Compatibility target
+이 저장소에는 NEMESIS 패키지 스크립트와 패키징 도구가 들어 있습니다. 커널 드라이버 소스 저장소는 아닙니다. 드라이버 소스와 빌드 절차는 [`nx4-rtl8188eu-kmod`](https://github.com/EGG-RAMYON/nx4-rtl8188eu-kmod), NEMESIS 원본 프로젝트는 [`xwtk/hmg_nemesis`](https://github.com/xwtk/hmg_nemesis)에서 관리합니다.
 
-- Vehicle family: Hyundai Tucson NX4 HEV, Gen5W
-- Head unit: Hyundai Mobis AVNT STD G50 WIDE R6
-- Android: 4.4.2; kernel: `3.18.24-tcc`; ARMv7
-- Device property checked by the package: `wp_daudioplus_nx4hev_kr`
-- NEMESIS: 1.16.7
-- Adapter tested: ipTIME N150L, RTL8188EU, USB ID `0bda:8179`
-- Driver module: `r8188eu.ko`; diagnostic marker: `NX4D1_20261104`
+## 대상 환경
 
-These values identify the target platform/build and adapter model; they are not identifiers for an individual vehicle. Compatibility outside the tested configuration is not claimed.
+- 차종 계열: Hyundai Tucson NX4 HEV, Gen5W
+- 헤드유닛: Hyundai Mobis AVNT STD G50 WIDE R6
+- Android 4.4.2, 커널 `3.18.24-tcc`, ARMv7
+- 패키지가 확인하는 기기 속성: `wp_daudioplus_nx4hev_kr`
+- NEMESIS 1.16.7
+- 시험 어댑터: ipTIME N150L, RTL8188EU, USB ID `0bda:8179`
+- 드라이버 모듈: `r8188eu.ko`; 진단 마커: `NX4D1_20261104`
 
-## Package behavior
+이 값은 대상 플랫폼·빌드와 어댑터 모델을 나타내며 특정 차량 한 대를 식별하지 않습니다. 명시된 환경 외의 호환성은 보장하지 않습니다.
 
-The service checks the product device property and kernel release, stores the initial enabled/disabled state of `com.google.android.projection.sink`, requests that package be disabled while the Wi-Fi service is active, loads `r8188eu.ko` with its diagnostic parameter, verifies the module marker and USB ID, waits for `wlan0`, and attempts to bring the interface up. The service does not configure an AP, credentials, DHCP, DNS, or routing.
+## 패키지 동작
 
-On normal stop or handled termination signals, the service's EXIT trap calls `bin/restore.sh`. The helper restores only the saved original Android Auto state and clears the active marker after a confirmed restore. Missing or invalid original-state data causes no guessed enable/disable action.
+서비스는 기기 속성과 커널 버전을 확인하고 `com.google.android.projection.sink`의 최초 활성/비활성 상태를 저장합니다. Wi-Fi 서비스가 동작하는 동안 이 패키지의 비활성화를 요청하고, `r8188eu.ko`와 진단 파라미터를 적재합니다. 모듈 마커와 USB ID를 확인한 뒤 `wlan0`가 생성될 때까지 기다리고 인터페이스 활성화를 시도합니다. AP, 비밀번호, DHCP, DNS, 라우팅 설정은 하지 않습니다.
 
-## Validation status
+정상 종료 또는 처리 가능한 종료 시그널에서는 EXIT trap이 `bin/restore.sh`를 실행합니다. 이 스크립트는 저장된 최초 상태를 복원하고 복원 성공이 확인된 뒤 active 표시를 제거합니다. 원래 상태가 없거나 유효하지 않으면 임의로 활성화·비활성화하지 않습니다.
 
-Reported separate vehicle testing succeeded for module load, adapter recognition, `wlan0` creation/activation, AP association, DHCP, external IP traffic, DNS lookup, and wireless ADB. Wi-Fi success was observed after disabling Android Auto projection; the internal cause of the interaction is not established.
+## 검증 현황
 
-For package v1.0.3, STOP restoring the original Android Auto state was confirmed. End-to-end START through this NEMESIS service, repeated START/STOP, unplug/reconnect, reboot recovery, forced termination recovery, and simultaneous Android Auto/Wi-Fi have not been confirmed. See [VALIDATION.md](docs/VALIDATION.md).
+별도 실차 시험에서 모듈 적재, 어댑터 인식, `wlan0` 생성/활성화, AP 연결, DHCP, 외부 IP 통신, DNS 조회, 무선 ADB가 성공했다고 보고됐습니다. Android Auto 프로젝션을 비활성화한 뒤 Wi-Fi 연결이 성공했으며, 내부 원인은 규명되지 않았습니다.
 
-## Install
+NEMESIS v1.0.3의 STOP 시 최초 Android Auto 상태 복원은 확인됐습니다. 이 서비스의 START 전체 과정, 반복 START/STOP, USB 분리·재연결, 재부팅, 강제 종료 복구, Android Auto와 Wi-Fi 동시 사용은 확인되지 않았습니다. [검증 현황](docs/VALIDATION.md)을 참조하세요.
 
-Download the USB installer bundle from the GitHub Release, extract its contents to the **root** of a FAT32 or exFAT USB drive, and keep the nested package ZIP intact. The USB root descriptor points to `packages/nx4.rtl8188eu.manual_v1.0.3.zip`; that package ZIP has its own root `NEMESIS.data` and package files. NEMESIS uses the descriptor's `type=install` and relative `path` to install the package.
+## 설치
 
-The head unit has one USB port. Remove the installation drive before connecting the Wi-Fi adapter. See [INSTALL.md](docs/INSTALL.md). Maintainer packaging steps are in [BUILD.md](docs/BUILD.md).
+GitHub Release에서 USB 설치 번들을 내려받아 FAT32 또는 exFAT USB 메모리의 **루트**에 압축 해제합니다. 내부 NEMESIS 패키지 ZIP은 다시 풀지 않습니다. USB 루트의 descriptor는 `packages/nx4.rtl8188eu.manual_v1.0.3.zip`을 `type=install` 및 상대 `path`로 지정합니다. 패키지 ZIP 내부에는 별도의 루트 `NEMESIS.data`와 서비스 파일이 있습니다.
 
-## Start, stop, uninstall
+헤드유닛의 USB 포트가 하나이므로 설치 USB를 제거한 후 Wi-Fi 동글을 연결하세요. 자세한 절차는 [INSTALL.md](docs/INSTALL.md)를, 관리자의 패키지 재현 절차는 [BUILD.md](docs/BUILD.md)를 참조하세요.
 
-Use NEMESIS Manager or its CLI:
+## 서비스 시작·정지 및 제거
+
+NEMESIS Manager 또는 CLI를 이용합니다.
 
 ```sh
 /system/xbin/nemesis service start nx4.rtl8188eu.manual/wifi-loader
@@ -44,16 +46,12 @@ Use NEMESIS Manager or its CLI:
 /system/xbin/nemesis uninstall nx4.rtl8188eu.manual
 ```
 
-Verify commands against the NEMESIS version installed on the head unit. Do not manually change Android Auto's enabled state while the service is active. See [OPERATION.md](docs/OPERATION.md).
+실제 head unit의 NEMESIS 버전에서 명령을 확인하세요. 서비스가 동작하는 동안 Android Auto 상태를 수동으로 바꾸지 마세요. 자세한 설명은 [OPERATION.md](docs/OPERATION.md)에 있습니다.
 
-## Recovery and known limits
+## 복구 및 제한사항
 
-A shell trap cannot run after SIGKILL, power loss, or a system crash. If the head unit stops unexpectedly while the service is active, use the reviewed restore helper with its saved state before uninstalling. Do not infer the original Android Auto state from current state alone. Android Auto and Wi-Fi simultaneous use is not validated. See [SAFETY.md](docs/SAFETY.md) and [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
+SIGKILL, 전원 차단, 시스템 충돌에서는 셸 trap이 실행되지 않습니다. 서비스 중단 후 문제가 있으면 저장된 상태를 이용해 검토된 복원 도구를 실행한 뒤 제거하세요. 현재 상태만 보고 최초 상태를 추정하지 마세요. Android Auto와 Wi-Fi 동시 사용은 검증되지 않았습니다. [SAFETY.md](docs/SAFETY.md)와 [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)를 참조하세요.
 
-## Source and license
+## 출처 및 라이선스
 
-The service scripts and package metadata in this repository are licensed under GPL-2.0-only; see [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md). The RTL8188EU module is distributed as a Release asset and is separately licensed; its source and build records are in the driver repository. NEMESIS is a separate upstream project under AGPL-3.0; no upstream implementation code is copied into this repository.
-
-## 한국어 안내
-
-한국어 설명은 [README.ko.md](README.ko.md)를 참조하세요.
+이 저장소의 서비스 스크립트와 메타데이터는 GPL-2.0-only로 배포합니다. [LICENSE](LICENSE)와 [NOTICE.md](NOTICE.md)를 확인하세요. RTL8188EU 모듈은 별도 Release 자산이며 자체 라이선스가 적용됩니다. 소스와 빌드 기록은 드라이버 저장소에 있습니다. NEMESIS는 AGPL-3.0 라이선스의 별도 upstream 프로젝트이며, 구현 코드를 이 저장소에 복사하지 않았습니다.
